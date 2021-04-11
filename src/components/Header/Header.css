@@ -1,0 +1,73 @@
+@import url("https://fonts.googleapis.com/css2?family=Redressed&display=swap");
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: black;
+  height: 56px;
+  z-index: 100;
+}
+.header_Content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  padding: 0 1rem;
+}
+.header_name {
+  font-family: "Redressed", cursive;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.15rem;
+  color: white;
+}
+.header__logo {
+  margin: 3px 0px;
+}
+.header__nav {
+  display: flex;
+  justify-content: space-evenly;
+}
+.header__nav Link:hover,
+.header__nav Link:active {
+  color: #4bd80a;
+}
+.Spacer {
+  flex: 1;
+}
+.header__optionLine {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 13px;
+  color: #fff;
+  font-size: 11px;
+  font-family: josefin sans, sans-serif;
+  font-weight: 600;
+  line-height: 23px;
+  box-sizing: border-box;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+.header__optionAuth {
+  display: flex;
+  flex-direction: row;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: sans-serif;
+  margin-left: -2px;
+  margin-right: 5px;
+  color: white;
+  letter-spacing: 0.05rem;
+}
+@media (max-width: 768px) {
+  .header__nav {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .header_toogleButton {
+    display: none;
+  }
+}

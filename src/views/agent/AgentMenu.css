@@ -1,0 +1,6 @@
+.Profile:hover {
+  background-color: rgb(172, 172, 40);
+}
+.Profile::after {
+  background-color: rgb(93, 93, 214);
+}
