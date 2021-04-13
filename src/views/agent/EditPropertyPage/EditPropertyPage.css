@@ -5,9 +5,19 @@
   transition: 0.3s;
   padding: 10px;
 }
+.imageContainerEditPage {
+  width: "60%";
+  height: "150px";
+  object-fit: contain;
+}
 @media (max-width: 768px) {
   .cardGlobal {
     margin-left: 10px;
+  }
+  .imageContainerEditPage {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
   }
 }
 /* On mouse-over, add a deeper shadow */

@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: fit-content;
 }
 .home__containerBigger {
   display: flex;
@@ -14,12 +13,26 @@
   height: 400px;
   max-height: 30%;
 }
+.property_HomeCard {
+  display: flex;
+  flex-direction: row;
+  margin: 20px;
+}
 @media (max-width: 768px) {
+  .home__add {
+    max-height: 30px;
+  }
+  .home__rowHeader {
+    margin-top: -100px;
+  }
+  .property_HomeCard {
+    flex-direction: column;
+  }
   .home__containerBigger {
-    margin-top: -120px;
+    margin-top: 50px;
     left: 0;
     width: 100%;
-    height: 500px;
+    height: 150px;
     min-height: 40%;
   }
   .home_imageCardContainer {
@@ -76,7 +89,7 @@
 .home_imageTextMob {
   align-items: center;
   color: white;
-  font-size: 21px;
+  font-size: 17px;
   font-weight: 600;
 }
 .header__search {
@@ -98,6 +111,12 @@
   border: none;
   width: 100%;
 }
+.header__searchInputMob {
+  height: 30px;
+  padding: 10px;
+  border: none;
+  width: 100%;
+}
 .header__searchIcon {
   padding: 5px;
   height: 40px;
@@ -108,7 +127,7 @@
 }
 .header__searchIconMob {
   padding: 5px;
-  height: 40px;
+  height: 30px;
   background-color: #4bd80a;
   color: white;
   font-weight: 600;
@@ -170,29 +189,15 @@
   justify-content: center;
   padding: 15px;
 }
-/* .home__rowOne {
-  margin-top: 50px;
-} */
 .home__rowHeader {
   display: flex;
-  flex-direction: row;
   justify-content: center;
-  margin-top: 120px;
-  /* margin-top: "150px"; */
-  /* border-left: 15px solid #10ad7e;
-  border-right: 15px solid #10ad7e; */
+  margin-top: 100px;
 }
 .home__rowTitleLine {
-  /* padding-top: "100px"; */
   display: flex;
-  /* flex-direction: row; */
   justify-content: center;
-  /* margin-top: 50px; */
-  /* margin: 10px; */
-  /*border: 5px solid #10ad7e;*/
   width: 60%;
-  /* height: 50px;  */
-  /* background-color: #4bd80a; */
   border-bottom: 1px solid #4bd80a;
   color: rgb(34, 33, 33);
   font-size: 30px;
@@ -231,6 +236,8 @@
   justify-content: center;
   /* align-items: center; */
   margin-top: 30px;
+  width: 100%;
+  height: 90px;
 }
 .cardsix {
   display: flex;

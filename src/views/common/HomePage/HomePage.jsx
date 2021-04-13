@@ -146,7 +146,7 @@ class HomePage extends React.Component {
                     </div>
                     <div className="header__searchMob">
                       <input
-                        className="header__searchInput"
+                        className="header__searchInputMob"
                         type="text"
                         placeholder="Enter localities or landmarks here"
                       />
@@ -164,7 +164,7 @@ class HomePage extends React.Component {
             <div className="home__rowTitleLine">Trending</div>
           </div>
           {/* Property card */}
-          <div className="row  m-auto">{renderComponent}</div>
+          <div className="property_HomeCard">{renderComponent}</div>
           {/* Button */}
           <div className="home__moreProperty">
             <Link to="/properties-list" className="home__morePropertyButton">
@@ -176,9 +176,9 @@ class HomePage extends React.Component {
             <img
               src="https://tpc.googlesyndication.com/simgad/2963222261425929345"
               border="0"
-              width="970"
-              height="90"
-              alt=""
+              // width="100%"
+              // height="90"
+              alt="image-Add"
               class="img_ad"
             />
           </div>

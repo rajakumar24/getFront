@@ -82,6 +82,9 @@ class Header extends React.Component {
               <Link to="/contact">
                 <span className="header__optionLine">Contact</span>
               </Link>
+              <Link to="/blog">
+                <span className="header__optionLine">Blog</span>
+              </Link>
             </div>
             <span className="header__optionAuth">
               {this.props.auth.isAuthenticated ? authLinks : guestLinks}

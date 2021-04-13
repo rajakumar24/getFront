@@ -6,6 +6,7 @@ import AgentProfilePage from "./AgentProfilePage/AgentProfilePage";
 import AboutPage from "./AboutPage/About/AboutMain";
 import PassionPage from "./AboutPage/Passion/PassionMain";
 import ContactPage from "./ContactPage/ContactPage";
+import BlogDashboard from "./BlogPage/index";
 
 export {
   AboutPage,
@@ -16,4 +17,5 @@ export {
   PropertyListPage,
   PropertyDetailPage,
   AgentProfilePage,
+  BlogDashboard,
 };

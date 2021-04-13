@@ -27,6 +27,12 @@
   border-right: 1px solid rgb(219, 215, 215);
   background-color: #f7f7f7;
 }
+.SideMenu_ContainerPropertyList {
+  width: 25%;
+  margin: 0;
+  border-right: 1px solid rgb(219, 215, 215);
+  background-color: #f7f7f7;
+}
 .card_Container {
   width: 65%;
   height: fit-content;
@@ -77,6 +83,9 @@
     margin: 0;
   }
   .SideMenu_Container {
+    display: none;
+  }
+  .SideMenu_ContainerPropertyList {
     display: none;
   }
   .card_Container {

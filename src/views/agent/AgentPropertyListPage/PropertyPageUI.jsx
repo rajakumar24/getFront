@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Popup } from "../../../components";
 import Button from "@material-ui/core/Button";
-import CardSmaller from "./CardSmaller";
 import { baseUrl } from "../../../baseURL/baseURL";
 
 class PropertyPageUI extends React.Component {

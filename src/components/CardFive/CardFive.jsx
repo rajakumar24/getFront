@@ -66,14 +66,10 @@ class CardFive extends React.Component {
                   {status}
                 </span>
                 <div className="flex__flow">
-                  <div>
-                    <p className="black__title">Type- {propertyType}</p>
-                    <p className="black__title">Bedrooms- {beds} </p>
-                  </div>
-                  <div>
-                    <p className="black__title">Parking- {garages} </p>
-                    <p className="black__title">sqft- {area} </p>
-                  </div>
+                  <p className="black__title">Type- {propertyType}</p>
+                  <p className="black__title">Bedrooms- {beds} </p>
+                  <p className="black__title">Parking- {garages} </p>
+                  <p className="black__title">sqft- {area} </p>
                 </div>
                 <div
                   style={{

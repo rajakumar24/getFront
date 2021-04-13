@@ -1,7 +1,8 @@
 .product {
-  width: 500px;
+  width: 400px;
   height: 300px;
-  margin: 20px 30px;
+  margin: 20px;
+  object-fit: cover;
   cursor: pointer;
 }
 .product__imageContainer {
@@ -19,7 +20,13 @@
   border: 1px solid rgb(184, 181, 181);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-
+@media (max-width: 768px) {
+  .product {
+    width: 100%;
+    height: 200px;
+    margin: 0px;
+  }
+}
 .product__img {
   /* margin-top: -30px; */
   width: 100%;

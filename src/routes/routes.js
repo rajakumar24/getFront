@@ -9,6 +9,7 @@ import {
   AboutPage,
   PassionPage,
   ContactPage,
+  BlogDashboard,
 } from "../views/common";
 import { RegistrationPage, LoginPage } from "../views/visitor";
 import {
@@ -40,6 +41,7 @@ class Routes extends React.Component {
         <Route path="/about" component={AboutPage} />
         <Route path="/passion" component={PassionPage} />
         <Route path="/contact" component={ContactPage} />
+        <Route path="/blog" component={BlogDashboard} />
         <Route path="/forget-password" component={ForgetPassword} />
         <Route path="/change-password/:slug" component={ResetPassword} />
         <Route path="/otp" component={Otp} />

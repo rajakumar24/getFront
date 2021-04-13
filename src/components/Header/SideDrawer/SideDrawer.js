@@ -81,16 +81,19 @@ const sideDrawer = (props) => {
           ) : null}
 
           <li>
-            <a href="/">Properties-List</a>
+            <a href="/properties-list">Properties-List</a>
           </li>
           <li>
             <a href="/">Home</a>
           </li>
           <li>
-            <a href="/">About</a>
+            <a href="/about">About</a>
           </li>
           <li>
-            <a href="/">Contact</a>
+            <a href="/contact">Contact</a>
+          </li>
+          <li>
+            <a href="/blog">Blog</a>
           </li>
           <li>
             {!props.auth.isAuthenticated ? (
