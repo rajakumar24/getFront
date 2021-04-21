@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  height: 60px;
+  height: 80px;
   width: 70%;
   margin: 15px 30px;
   border-bottom: 1px solid #4bd80a;
@@ -30,9 +30,9 @@
 }
 .propertyMob__header {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
-  height: 55px;
+  height: 75px;
   width: 100%;
   margin: 0 10px;
   padding: 0 20px;
@@ -48,6 +48,16 @@
   color: #8a8484;
   font-weight: 300;
   margin-top: 10px;
+}
+.light_ashFont {
+  font-size: 16px;
+  color: #8a8484;
+  font-weight: 300;
+}
+.black_Font16 {
+  color: #404141;
+  font-size: 16px;
+  font-weight: 300;
 }
 @media (max-width: 768px) {
   .sm_lightFont {
@@ -121,7 +131,7 @@
 .ovrview {
   display: flex;
   flex-direction: row;
-  height: 190px;
+  height: 230px;
   width: 100%;
   margin: 20px;
   border: 1px solid rgb(192, 190, 190);
@@ -150,6 +160,7 @@
   color: #a2a7a5;
   font-size: 10px;
   font-weight: 400;
+  padding-top: 10px;
 }
 .bg_blckFont {
   color: #404141;
@@ -264,6 +275,13 @@
   font-weight: 500;
   margin-top: 15px;
 }
+.font_backcolor {
+  color: #141414;
+  font-size: 20px;
+  font-weight: 500;
+  padding: 5px;
+  background-color: #d9f5eb;
+}
 .rate_font {
   color: #141414;
   font-size: 15px;
@@ -280,7 +298,7 @@
 .row_marginHeight {
   display: flex;
   flex-direction: row;
-  height: 250px;
+  height: 300px;
   margin: 0 10px;
 }
 .propertydisplay__bodyTwoPartTableContainerOne {
@@ -292,6 +310,18 @@
   display: flex;
   flex-direction: column;
   width: 35%;
+}
+
+.colmn_width50 {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+.colmn_width50Left {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  align-items: left;
 }
 .colmn_width40 {
   display: flex;
@@ -367,7 +397,6 @@
   color: #10ad7e;
   font-size: 25px;
   font-weight: 600;
-  margin-top: 15px;
 }
 .enquiry {
   position: fixed;
@@ -397,5 +426,12 @@
   color: rgb(221, 11, 134);
   font-size: 20px;
   font-weight: 400;
-  margin-top: 25px;
+  margin-top: 50px;
+}
+.mob__price {
+  /* margin-left: 100px; */
+  color: rgb(221, 11, 134);
+  font-size: 20px;
+  font-weight: 400;
+  margin-top: -5px;
 }

@@ -58,6 +58,7 @@ class Properties_List extends React.Component {
           <CardFive
             key={property._id}
             id={property._id}
+            apartName={property.apartName}
             title={property.title}
             propertyId={property._id}
             agentId={property.user._id}
@@ -96,10 +97,10 @@ class Properties_List extends React.Component {
     }
 
     return (
-      <div className="dashboard" style={{ height: "780px", marginTop: "50px" }}>
-        <div className="dashboard__Container" style={{ height: "780px" }}>
+      <div className="dashboardSmaller">
+        <div className="dashboard__Container">
           <div className="row">
-            <div className="dashboard__columnOne">
+            <div className="SideMenu_ContainerPropertyList">
               <div className="column">
                 <div className="sidebar__titleContainer">
                   <p className="sidebar__title">Filter Property</p>
@@ -129,27 +130,11 @@ class Properties_List extends React.Component {
               </div>
             </div>
             {/* property card start */}
-            <div
-              // className="shadow"
-              style={{
-                width: "70%",
-                height: "850px",
-                padding: "1px",
-                overflowY: "auto",
-                margin: "3%",
-              }}
-            >
-              {renderComponent}
-
-              <Pagination
-                itemsCount={totalCount}
-                pageSize={pageSize}
-                currentPage={currentPage}
-                onPageChange={this.handlePageChange}
-              />
-            </div>
+            <div className="card_ContainerBig">{renderComponent}</div>
+            {/*  property card end  */}
           </div>
         </div>
+        <div className="card_ContainerSmaller">{renderComponent}</div>
       </div>
     );
   }
