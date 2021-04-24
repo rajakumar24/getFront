@@ -27,6 +27,7 @@ class CardFive extends React.Component {
       beds,
       baths,
       garages,
+      handleContactModal,
       // deleteProperty
       approveid,
     } = this.props;
@@ -255,10 +256,11 @@ class CardFive extends React.Component {
                     height: "30px",
                   }}
                   type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href = `/agent-profile/${agentId}`;
-                  }}
+                  // onClick={(e) => {
+                  //   e.preventDefault();
+                  //   window.location.href = `/agent-profile/${agentId}`;
+                  // }}
+                  onClick={handleContactModal}
                 >
                   <p className="button__title">Get Owner Details</p>
                 </button>

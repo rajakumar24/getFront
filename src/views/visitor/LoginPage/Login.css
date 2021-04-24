@@ -62,7 +62,8 @@
   width: 100%;
   height: 30px;
   border: 1px solid;
-  margin-top: 15px;
+  text-align: center;
+  /* margin-top: 15px; */
   border-color: #4bd80a #4bd80a #4bd80a;
 }
 .login__registerButton {

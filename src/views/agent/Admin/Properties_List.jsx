@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import * as actions from "../../../store/actions";
 import { CardFive, Pagination } from "../../../components";
+import ContactModal from "../../../components/ContactModal/ContactModal";
 import { Spinner } from "reactstrap";
 // import AdminMasterRedirect from "./AdminMasterRedirect"
 
@@ -10,6 +11,7 @@ class Properties_List extends React.Component {
     currentPage: 1,
     pageSize: 5,
     selectedFilter: "all",
+    contactForm: false,
   };
 
   componentDidMount() {
@@ -43,7 +45,12 @@ class Properties_List extends React.Component {
       this.state.selectedFilter
     );
   };
-
+  handleContactModal = () => {
+    this.setState({
+      ...this.state,
+      contactForm: true,
+    });
+  };
   render() {
     let { pageSize, currentPage } = this.state;
     // console.log("props", this.props);
@@ -74,6 +81,7 @@ class Properties_List extends React.Component {
             baths={property.baths}
             garages={property.garages}
             approveid={property.approve}
+            handleContactModal={this.state.handleContactModal}
           />
         );
       });
@@ -135,6 +143,7 @@ class Properties_List extends React.Component {
           </div>
         </div>
         <div className="card_ContainerSmaller">{renderComponent}</div>
+        {this.state.contactForm ? <ContactModal /> : null}
       </div>
     );
   }

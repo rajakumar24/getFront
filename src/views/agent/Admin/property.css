@@ -206,6 +206,12 @@
   display: flex;
   flex-direction: column;
 }
+.related_posts {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+}
 .ques_ansBox {
   width: 100%;
   padding: 10px;

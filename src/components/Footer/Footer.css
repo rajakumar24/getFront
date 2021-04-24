@@ -15,6 +15,17 @@
   background-color: rgb(185, 241, 241);
   height: 500px;
 }
+.footer-second-section {
+  background-color: rgb(56, 54, 54);
+}
+.footer-second-section ul li {
+  list-style: none;
+  text-align: justify;
+  color: rgb(127, 127, 127);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 24px;
+}
 .footer__containerImage {
   display: flex;
   justify-content: center;
@@ -39,7 +50,21 @@
   height: 300px;
   background-color: rgb(28, 29, 29);
 }
+.row_column {
+  display: flex;
+  flex-direction: row;
+}
 @media (max-width: 768px) {
+  .row_column {
+    display: flex;
+    flex-direction: column;
+  }
+  .footer-second-section ul li {
+    text-align: left;
+    line-height: 24px;
+    font-weight: 400;
+    font-size: auto;
+  }
   .footer__containerThree {
     flex-direction: column;
     align-items: center;

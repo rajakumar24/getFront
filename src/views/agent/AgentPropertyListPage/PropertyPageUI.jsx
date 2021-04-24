@@ -211,7 +211,7 @@ class PropertyPageUI extends React.Component {
                       type="button"
                       onClick={(e) => {
                         e.preventDefault();
-                        window.location.href = `/property-detail/${property._id}`;
+                        window.location.href = `/agent/AdminQues/${property._id}`;
                       }}
                     >
                       View Details

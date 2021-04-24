@@ -20,7 +20,7 @@ class CardOne extends React.Component {
 
     return (
       // <Link to={`/${title}/${propertyId}`}>
-      <Link to={`/property-detail/${propertyId}`}>
+      <Link to={`/agent/AdminQues/${propertyId}`}>
         <div
           className="product"
           style={{ backgroundImage: `url(${baseUrl}uploads/${img})` }}

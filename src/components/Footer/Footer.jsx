@@ -9,6 +9,76 @@ const Footer = (props) => {
     <Grid container>
       <Grid item xs={12} lg={12}>
         <div className="footer">
+          <div className="footer-second-section">
+            <div className="container">
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="row pt-2">
+                    <div className="col-md-3">
+                      <div className="footer-parent-div">
+                        <div className="footer-child-div">
+                          <ul>
+                            <li>Real estate in Mumbai</li>
+                            <li>Real estate in Bengaluru</li>
+                            <li>Real estate in Hyderabad</li>
+                            <li>Real estate in Pune</li>
+                            <li>Real estate in Chennai</li>
+                            <li>Real estate in Delhi</li>
+                            <li>Real estate in Gurgaon</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="footer-parent-div">
+                        <div className="footer-child-div">
+                          <ul>
+                            <li>Real estate in Gurgaon</li>
+                            <li>Real estate in Noida</li>
+                            <li>Real estate in Kolkata</li>
+                            <li>Real estate in Goa</li>
+                            <li>Real estate in Thane</li>
+                            <li>Real estate in Panjab</li>
+                            <li>Real estate in Faridabad</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="footer-parent-div">
+                        <div className="footer-child-div">
+                          <ul>
+                            <li>Real estate in Mumbai</li>
+                            <li>Real estate in Bengaluru</li>
+                            <li>Real estate in Hyderabad</li>
+                            <li>Real estate in Pune</li>
+                            <li>Real estate in Chennai</li>
+                            <li>Real estate in Delhi</li>
+                            <li>Real estate in Gurgaon</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="footer-parent-div">
+                        <div className="footer-child-div">
+                          <ul>
+                            <li>Real estate in Gurgaon</li>
+                            <li>Real estate in Noida</li>
+                            <li>Real estate in Kolkata</li>
+                            <li>Real estate in Goa</li>
+                            <li>Real estate in Thane</li>
+                            <li>Real estate in Panjab</li>
+                            <li>Real estate in Faridabad</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           {/* Second Last Row */}
           <div className="footer__containerThree">
             <div className="footer__titleOne">
