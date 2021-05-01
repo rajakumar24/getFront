@@ -32,7 +32,7 @@ class AdminQuesPage extends Component {
     furnishing: "",
     balcony: "",
     title: "",
-    imgUrl: "",
+    imgUrl: [],
     price: "",
     description: "",
     address: "",
@@ -326,6 +326,7 @@ class AdminQuesPage extends Component {
   }
 
   render() {
+    console.log("url", this.state.imgUrl);
     const { question, answer, id } = this.state;
     if (this.state.redirect) {
       console.log("Currentapprove", this.state.approve);
@@ -384,10 +385,14 @@ class AdminQuesPage extends Component {
                 <div className="propertydisplay__body">
                   <div className="propertydisplay__bodyOne">
                     <div className="propertydisplay__bodyOneImagePart">
+                      {/* {this.state.imgUrl &&
+                        this.state.imgUrl.map((img, i) => { */}
                       <img
-                        src={`${baseUrl}uploads/${this.state.imgUrl}`}
+                        //key={i}
+                        src={`${baseUrl}uploads/${this.state.imgUrl[1]}`}
                         alt="Responsive"
                       />
+                      {/* })} */}
                     </div>
                     <div className="propertydisplay__bodyOneDetailPart">
                       <span

@@ -14,6 +14,7 @@ import "./Add.css";
 import Map from "./location/Location";
 import { baseUrl } from "../../../baseURL/baseURL";
 import { withStyles } from "@material-ui/core/styles";
+import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import { green } from "@material-ui/core/colors";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -27,6 +28,7 @@ import {
   CardBody,
 } from "phoenix-component-2.0/card";
 import Select from "@material-ui/core/Select";
+import DatePicker from "./DateField";
 //
 const GreenCheckbox = withStyles({
   root: {
@@ -42,7 +44,7 @@ class AddPropertyPage extends Component {
   state = {
     //
     images: [],
-    selectedFile: null,
+    selectedFile: [],
     loading: false,
     //
     apartType: "",
@@ -63,7 +65,7 @@ class AddPropertyPage extends Component {
     furnishing: "",
     balcony: "",
     title: "",
-    imgUrl: "",
+    imgUrl: [],
     price: "",
     description: "",
     address: "",
@@ -147,54 +149,76 @@ class AddPropertyPage extends Component {
 
   //
   fileChangedHandler = (event) => {
-    const file = event.target.files[0];
-    this.setState({ selectedFile: file });
+    //const file = event.target.files[0];
+    this.setState({
+      selectedFile: [...this.state.selectedFile, ...event.target.files],
+    });
+    //this.setState({ selectedFile: file });
   };
 
   uploadImage = (event) => {
     event.preventDefault();
+    // var ApartmntfirstWord = this.state.apartName.replace(/ .*/, "");
+    // var cityFirstWord = this.state.city.replace(/ .*/, "");
+    // if (this.state.count === 0) {
+    //   return this.setState({
+    //     Imagename: `${ApartmntfirstWord + cityFirstWord}`,
+    //     count: this.state.count + 1,
+    //   });
+    // } else if (this.state.count === 1) {
+    //   this.setState({
+    //     Imagename: `${ApartmntfirstWord + cityFirstWord + this.state.status}`,
+    //     count: this.state.count + 1,
+    //   });
+    // } else if (this.state.count === 2) {
+    //   this.setState({
+    //     Imagename: `${
+    //       ApartmntfirstWord + cityFirstWord + this.state.propertyType
+    //     }`,
+    //     count: this.state.count + 1,
+    //   });
+    // } else {
+    //   this.setState({
+    //     Imagename: `${ApartmntfirstWord + cityFirstWord + this.state.locality}`,
+    //     count: this.state.count + 1,
+    //   });
+    // }
 
-    if (this.state.count === 0) {
-      return this.setState({
-        Imagename: this.state.title,
-        count: this.state.count + 1,
-      });
-    } else if (this.state.count === 1) {
-      this.setState({
-        Imagename: `${this.state.title + this.state.price}`,
-        count: this.state.count + 1,
-      });
-    } else if (this.state.count === 2) {
-      this.setState({
-        Imagename: `${this.state.title + this.state.lat}`,
-        count: this.state.count + 1,
-      });
-    } else {
-      this.setState({
-        Imagename: `${this.state.title + this.state.count}`,
-        count: this.state.count + 1,
-      });
-    }
-
-    console.log("title", this.state.Imagename);
+    console.log("title", this.state.selectedFile);
 
     if (!this.state.selectedFile) return;
 
     this.setState({
       loading: true,
     });
-
-    const formData = new FormData();
-    formData.append("image", this.state.selectedFile, this.state.Imagename);
-    console.log("dataformData", formData);
-    axios.post(`${baseUrl}api/property/upload`, formData).then(({ data }) => {
-      console.log("data", data);
-      this.setState({
-        images: [data.fileName, ...this.state.images],
-        loading: false,
-        imgUrl: data.fileName,
+    for (let index = 0; index < this.state.selectedFile.length; index++) {
+      const element = this.state.selectedFile[index];
+      const fd = new FormData();
+      fd.append("image", element, element.name);
+      console.log("titlefd", fd);
+      axios.post(`${baseUrl}api/property/upload`, fd).then(({ data }) => {
+        console.log("images", data);
+        this.setState({
+          images: [data.fileName, ...this.state.images],
+          loading: false,
+          imgUrl: [data.fileName, ...this.state.imgUrl],
+        });
       });
-    });
+    }
+    // const formData = new FormData();
+    // // formData.append("image", this.state.selectedFile, this.state.Imagename);
+    // Object.values(this.state.selectedFile).forEach(function (file, index) {
+    //   formData.append(index, file);
+    // });
+    // console.log("dataformData", formData);
+    // axios.post(`${baseUrl}api/property/upload`, formData).then(({ data }) => {
+    //   console.log("data", data);
+    //   this.setState({
+    //     images: [data.fileName, ...this.state.images],
+    //     loading: false,
+    //     imgUrl: data.fileName,
+    //   });
+    // });
   };
   //
   mapInfo = (lat, long) => {
@@ -212,6 +236,13 @@ class AddPropertyPage extends Component {
 
     this.setState({
       [currentTarget.name]: value,
+    });
+  };
+  handleDateField = (event) => {
+    console.log("dateValue", event.target.value);
+    this.setState({
+      ...this.state,
+      availableFrom: event.target.value,
     });
   };
   onFormSubmit = (e) => {
@@ -314,10 +345,16 @@ class AddPropertyPage extends Component {
       });
     }
   }
-
+  handleTitle = () => {
+    this.setState({
+      ...this.state,
+      title: `Well designed ${this.state.bhk} apartment, ${this.state.landmark} sqft carpet area, is available in ${this.state.locality} . Its in ${this.state.apartName} .`,
+    });
+  };
   render() {
     console.log("dataImageselectedFile", this.state.selectedFile);
     console.log("dataImage", this.state.images);
+    console.log("dataurl", this.state.imgUrl);
     //
     // const image = (url, index) => (
     //   <img alt="" className="photo" key={index} src={url} />
@@ -342,25 +379,31 @@ class AddPropertyPage extends Component {
       { label: "House", value: "house" },
       { label: "Independent House/Villa", value: "cottage" },
     ];
-    const propertyType = [
+    const propertyTypeSell = [
       { label: "Select", value: "" },
-      { label: "Apartment", value: "apartment" },
-      { label: "Flat", value: "flat" },
-      { label: "House", value: "house" },
-      { label: "Independent House/Villa", value: "cottage" },
+      { label: "Apartment", value: "Apartment" },
+      { label: "Builder Floor", value: "Builder Floor" },
+      { label: "Plot", value: "Plot" },
+      { label: "House/Villa", value: "House/Villa" },
+    ];
+    const propertyTypeRent = [
+      { label: "Select", value: "" },
+      { label: "Apartment", value: "Apartment" },
+      { label: "Builder Floor", value: "Builder Floor" },
+      { label: "House/Villa", value: "House/Villa" },
     ];
     const bhkType = [
       { label: "Select", value: "" },
-      { label: "1 RK", value: "1rk" },
-      { label: "1 BHK ", value: "1bhk" },
-      { label: "2 BHK", value: "2bhk" },
-      { label: "3 BHK", value: "3bhk" },
-      { label: "4 BHK", value: "4bhk" },
-      { label: "4+ BHK", value: "5bhk" },
+      { label: "1 RK", value: "1 RK" },
+      { label: "1 BHK ", value: "1 BHK" },
+      { label: "2 BHK", value: "2 BHK" },
+      { label: "3 BHK", value: "3 BHK" },
+      { label: "4 BHK", value: "4 BHK" },
+      { label: "4+ BHK", value: "4+ BHK" },
     ];
     const floorType = [
       { label: "Select", value: "" },
-      { label: "Ground", value: "0rk" },
+      { label: "Ground", value: "Ground" },
       { label: "1", value: "1" },
       { label: "2", value: "2" },
       { label: "3", value: "3" },
@@ -370,7 +413,7 @@ class AddPropertyPage extends Component {
     ];
     const totalFloorType = [
       { label: "Select", value: "" },
-      { label: "Ground Only", value: "0rk" },
+      { label: "Ground Only", value: "Ground Only" },
       { label: "1", value: "1" },
       { label: "2", value: "2" },
       { label: "3", value: "3" },
@@ -387,19 +430,24 @@ class AddPropertyPage extends Component {
       { label: "5 to 10 year", value: "5" },
       { label: "More than 10 year", value: "more" },
     ];
+    const availableFor = [
+      { label: "Select", value: "" },
+      { label: "Resale", value: "Resale" },
+      { label: "New", value: "New" },
+    ];
     const FacingType = [
       { label: "Select", value: "" },
-      { label: "North", value: "N" },
-      { label: "South", value: "S" },
-      { label: "East", value: "E" },
-      { label: "West", value: "W" },
-      { label: "Don't Know", value: "D" },
+      { label: "North", value: "North" },
+      { label: "South", value: "South" },
+      { label: "East", value: "East" },
+      { label: "West", value: "West" },
+      { label: "Don't Know", value: "Don't Know" },
     ];
     const furnishingType = [
       { label: "Select", value: "" },
-      { label: "Fully-furnished", value: "ff" },
-      { label: "Semi-furnished", value: "sf" },
-      { label: "Unfurnished", value: "E" },
+      { label: "Fully-furnished", value: "Fully-furnished" },
+      { label: "Semi-furnished", value: "Semi-furnished" },
+      { label: "Unfurnished", value: "Unfurnished" },
     ];
     const parkingType = [
       { label: "Select", value: "" },
@@ -410,8 +458,8 @@ class AddPropertyPage extends Component {
     ];
     const propertyStatus = [
       { label: "Select", value: "" },
-      { label: "Rent", value: "rent" },
-      { label: "Sale", value: "sale" },
+      { label: "Rent", value: "Rent" },
+      { label: "Sell", value: "Sell" },
     ];
     return (
       <div className="dashboard">
@@ -480,7 +528,7 @@ class AddPropertyPage extends Component {
             <div className="card_Container">
               <Card>
                 <div className="sidebar__titleContainerSecond">
-                  <p className="sidebar__title">Add Your Property Details</p>
+                  <p className="sidebar__title">Post Property</p>
                 </div>
                 <CardBody>
                   <div
@@ -494,7 +542,9 @@ class AddPropertyPage extends Component {
                       }}
                     >
                       <form onSubmit={this.onFormSubmit}>
-                        <p className="sidebar__title">Property Details</p>
+                        <p className="sidebar__title">
+                          Tell us about your property
+                        </p>
                         <div className="colored_separator"></div>
                         <div
                           className="row"
@@ -504,101 +554,7 @@ class AddPropertyPage extends Component {
                         >
                           <div className="input_width">
                             <p className="label__titleAddproperty">
-                              Apartment Type*
-                            </p>
-                          </div>
-                          <div style={{ width: "60%" }}>
-                            <div
-                              class="col-sm-12 col-xs-12"
-                              style={{
-                                float: "left",
-                                marginLeft: "10px",
-                                marginTop: "-27px",
-                                marginBottom: "-10px",
-                              }}
-                            >
-                              <SelectList
-                                options={propertyType}
-                                style={{ width: "100%" }}
-                                name="propertyType"
-                                onChange={this.handleInputChange}
-                                value={this.state.propertyType}
-                                error={this.props.errors.propertyType}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="row"
-                          style={{
-                            width: "100%",
-                          }}
-                        >
-                          <div className="input_width">
-                            <p className="label__titleAddproperty">
-                              Apartment Name*
-                            </p>
-                          </div>
-                          <div style={{ width: "60%" }}>
-                            <div
-                              class="input-group col-sm-12 col-xs-12"
-                              style={{ float: "left", marginLeft: "10px" }}
-                            >
-                              <input
-                                type="text"
-                                id="apartName"
-                                class="form-control input-md"
-                                style={{ width: "100%" }}
-                                required=""
-                                name="apartName"
-                                placeholder="Apartment Name"
-                                onChange={this.handleInputChange}
-                                value={this.state.apartName}
-                                error={this.props.errors.apartName}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="row"
-                          style={{
-                            width: "100%",
-                          }}
-                        >
-                          <div className="input_width">
-                            <p className="label__titleAddproperty">
-                              Property Title*
-                            </p>
-                          </div>
-                          <div style={{ width: "60%" }}>
-                            <div
-                              class="input-group col-sm-12 col-xs-12"
-                              style={{ float: "left", marginLeft: "10px" }}
-                            >
-                              <input
-                                type="text"
-                                id="title"
-                                class="form-control input-md"
-                                style={{ width: "100%" }}
-                                required=""
-                                name="title"
-                                placeholder="Property Title"
-                                onChange={this.handleInputChange}
-                                value={this.state.title}
-                                error={this.props.errors.title}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="row"
-                          style={{
-                            width: "100%",
-                          }}
-                        >
-                          <div className="input_width">
-                            <p className="label__titleAddproperty">
-                              Property Status*
+                              List property for*
                             </p>
                           </div>
                           <div style={{ width: "60%" }}>
@@ -629,68 +585,8 @@ class AddPropertyPage extends Component {
                           }}
                         >
                           <div className="input_width">
-                            <p className="label__titleAddproperty">BHK Type*</p>
-                          </div>
-                          <div style={{ width: "60%" }}>
-                            <div
-                              class="col-sm-12 col-xs-12"
-                              style={{
-                                float: "left",
-                                marginLeft: "10px",
-                                marginTop: "-27px",
-                                marginBottom: "-10px",
-                              }}
-                            >
-                              <SelectList
-                                options={bhkType}
-                                style={{ width: "100%" }}
-                                name="bhk"
-                                onChange={this.handleInputChange}
-                                value={this.state.bhk}
-                                error={this.props.errors.bhk}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="row"
-                          style={{
-                            width: "100%",
-                          }}
-                        >
-                          <div className="input_width">
-                            <p className="label__titleAddproperty">Floor*</p>
-                          </div>
-                          <div style={{ width: "60%" }}>
-                            <div
-                              class="col-sm-12 col-xs-12"
-                              style={{
-                                float: "left",
-                                marginLeft: "10px",
-                                marginTop: "-27px",
-                                marginBottom: "-10px",
-                              }}
-                            >
-                              <SelectList
-                                options={floorType}
-                                style={{ width: "100%" }}
-                                name="floor"
-                                onChange={this.handleInputChange}
-                                value={this.state.floor}
-                                error={this.props.errors.floor}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="row"
-                          style={{
-                            width: "100%",
-                          }}
-                        >
-                          <div className="input_width">
                             <p className="label__titleAddproperty">
-                              Total Floor*
+                              Property Type*
                             </p>
                           </div>
                           <div style={{ width: "60%" }}>
@@ -704,12 +600,146 @@ class AddPropertyPage extends Component {
                               }}
                             >
                               <SelectList
-                                options={totalFloorType}
+                                propertyTypeSell
+                                options={
+                                  this.state.status == "Sell"
+                                    ? propertyTypeSell
+                                    : propertyTypeRent
+                                }
                                 style={{ width: "100%" }}
-                                name="totalFloor"
+                                name="propertyType"
                                 onChange={this.handleInputChange}
-                                value={this.state.totalFloor}
-                                error={this.props.errors.totalFloor}
+                                value={this.state.propertyType}
+                                error={this.props.errors.propertyType}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        {this.state.status == "Sell" ? (
+                          <div
+                            className="row"
+                            style={{
+                              width: "100%",
+                            }}
+                          >
+                            <div className="input_width">
+                              <p className="label__titleAddproperty">
+                                Available For*
+                              </p>
+                            </div>
+                            <div style={{ width: "60%" }}>
+                              <div
+                                class="col-sm-12 col-xs-12"
+                                style={{
+                                  float: "left",
+                                  marginLeft: "10px",
+                                  marginTop: "-27px",
+                                  marginBottom: "-10px",
+                                }}
+                              >
+                                <SelectList
+                                  options={availableFor}
+                                  style={{ width: "100%" }}
+                                  name="propertyAge"
+                                  onChange={this.handleInputChange}
+                                  value={this.state.propertyAge}
+                                  error={this.props.errors.propertyAge}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+                        <div
+                          className="row"
+                          style={{
+                            width: "100%",
+                          }}
+                        >
+                          <div className="input_width">
+                            <p className="label__titleAddproperty">
+                              Available From*
+                            </p>
+                          </div>
+                          <div style={{ width: "60%" }}>
+                            <div
+                              class="input-group col-sm-12 col-xs-12"
+                              style={{ float: "left", marginLeft: "10px" }}
+                            >
+                              <DatePicker
+                                availableFrom={this.state.availableFrom}
+                                handleDateField={this.handleDateField}
+                              />
+                              {/* <input
+                                type="text"
+                                id="plot"
+                                class="form-control input-md"
+                                style={{ width: "100%" }}
+                                required=""
+                                placeholder="dd-mm-yyyy"
+                                name="availableFrom"
+                                onChange={this.handleInputChange}
+                                value={this.state.availableFrom}
+                                error={this.props.errors.availableFrom}
+                              /> */}
+                            </div>
+                          </div>
+                        </div>
+                        <p className="sidebar__title">Property Details</p>
+                        <div className="colored_separator"></div>
+                        <div
+                          className="row"
+                          style={{
+                            width: "100%",
+                          }}
+                        >
+                          <div className="input_width">
+                            <p className="label__titleAddproperty">City*</p>
+                          </div>
+                          <div style={{ width: "60%" }}>
+                            <div
+                              class="input-group col-sm-12 col-xs-12"
+                              style={{ float: "left", marginLeft: "10px" }}
+                            >
+                              <input
+                                type="text"
+                                id="city"
+                                class="form-control input-md"
+                                style={{ width: "100%" }}
+                                required=""
+                                name="city"
+                                placeholder="Your City"
+                                onChange={this.handleInputChange}
+                                value={this.state.city}
+                                error={this.props.errors.city}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className="row"
+                          style={{
+                            width: "100%",
+                          }}
+                        >
+                          <div className="input_width">
+                            <p className="label__titleAddproperty">Locality*</p>
+                          </div>
+                          <div style={{ width: "60%" }}>
+                            <div
+                              class="input-group col-sm-12 col-xs-12"
+                              style={{ float: "left", marginLeft: "10px" }}
+                            >
+                              <input
+                                type="text"
+                                id="locality"
+                                class="form-control input-md"
+                                style={{ width: "100%" }}
+                                required=""
+                                name="locality"
+                                placeholder="Enter Your locality"
+                                onChange={this.handleInputChange}
+                                value={this.state.locality}
+                                error={this.props.errors.locality}
                               />
                             </div>
                           </div>
@@ -722,7 +752,426 @@ class AddPropertyPage extends Component {
                         >
                           <div className="input_width">
                             <p className="label__titleAddproperty">
-                              Property Age*
+                              Project Name*
+                            </p>
+                          </div>
+                          <div style={{ width: "60%" }}>
+                            <div
+                              class="input-group col-sm-12 col-xs-12"
+                              style={{ float: "left", marginLeft: "10px" }}
+                            >
+                              <input
+                                type="text"
+                                id="apartName"
+                                class="form-control input-md"
+                                style={{ width: "100%" }}
+                                required=""
+                                name="apartName"
+                                placeholder="Project Name"
+                                onChange={this.handleInputChange}
+                                value={this.state.apartName}
+                                error={this.props.errors.apartName}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        {this.state.propertyType != "Plot" ? (
+                          <div
+                            className="row"
+                            style={{
+                              width: "100%",
+                            }}
+                          >
+                            <div className="input_width">
+                              <p className="label__titleAddproperty">
+                                Unit Types*
+                              </p>
+                            </div>
+                            <div style={{ width: "60%" }}>
+                              <div
+                                class="col-sm-12 col-xs-12"
+                                style={{
+                                  float: "left",
+                                  marginLeft: "10px",
+                                  marginTop: "-27px",
+                                  marginBottom: "-10px",
+                                }}
+                              >
+                                <SelectList
+                                  options={bhkType}
+                                  style={{ width: "100%" }}
+                                  name="bhk"
+                                  onChange={this.handleInputChange}
+                                  value={this.state.bhk}
+                                  error={this.props.errors.bhk}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            className="row"
+                            style={{
+                              width: "100%",
+                            }}
+                          >
+                            <div className="input_width">
+                              <p className="label__titleAddproperty">
+                                Plot Area*
+                              </p>
+                            </div>
+                            <div style={{ width: "60%" }}>
+                              <div
+                                class="input-group col-sm-12 col-xs-12"
+                                style={{ float: "left", marginLeft: "10px" }}
+                              >
+                                <input
+                                  type="text"
+                                  id="plot"
+                                  class="form-control input-md"
+                                  style={{ width: "100%" }}
+                                  required=""
+                                  placeholder="Plot area in sq.ft"
+                                  name="bhk"
+                                  onChange={this.handleInputChange}
+                                  value={this.state.bhk}
+                                  error={this.props.errors.bhk}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        <div
+                          className="row"
+                          style={{
+                            width: "100%",
+                          }}
+                        >
+                          <div className="input_width">
+                            <p className="label__titleAddproperty">
+                              {this.state.propertyType != "Plot"
+                                ? "Built Up*"
+                                : "Plot Length"}
+                            </p>
+                          </div>
+                          <div style={{ width: "60%" }}>
+                            <div
+                              class="input-group col-sm-12 col-xs-12"
+                              style={{ float: "left", marginLeft: "10px" }}
+                            >
+                              <input
+                                type="text"
+                                id="area"
+                                class="form-control input-md"
+                                style={{ width: "100%" }}
+                                required=""
+                                name="area"
+                                placeholder={
+                                  this.state.propertyType != "Plot"
+                                    ? "Built Up area in sq.ft"
+                                    : "Enter Plot Length"
+                                }
+                                onChange={this.handleInputChange}
+                                value={this.state.area}
+                                validate={this.numbersOnly}
+                                error={this.props.errors.area}
+                              />
+                            </div>
+                          </div>
+                        </div>{" "}
+                        <div
+                          className="row"
+                          style={{
+                            width: "100%",
+                          }}
+                        >
+                          <div className="input_width">
+                            <p className="label__titleAddproperty">
+                              {this.state.propertyType != "Plot"
+                                ? "Carpet Area*"
+                                : "Plot Breadth"}
+                            </p>
+                          </div>
+                          <div style={{ width: "60%" }}>
+                            <div
+                              class="input-group col-sm-12 col-xs-12"
+                              style={{ float: "left", marginLeft: "10px" }}
+                            >
+                              <input
+                                type="text"
+                                id="landmark"
+                                class="form-control input-md"
+                                style={{ width: "100%" }}
+                                required=""
+                                name="landmark"
+                                placeholder={
+                                  this.state.propertyType != "Plot"
+                                    ? "Carpet area in sq.ft"
+                                    : "Enter Plot Breadth"
+                                }
+                                onChange={this.handleInputChange}
+                                value={this.state.landmark}
+                                error={this.props.errors.landmark}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <p
+                          className="sidebar__title"
+                          style={{ marginTop: "20px" }}
+                        >
+                          Gallery-Upload Photos
+                        </p>
+                        <div className="colored_separator"></div>
+                        {/* <div
+                          className="row"
+                          style={{
+                            width: "100%",
+                          }}
+                        >
+                          <div className="input_width">
+                            <p className="label__titleAddproperty">Image URL</p>
+                          </div>
+                          <div style={{ width: "60%" }}>
+                            <div
+                              class="input-group col-sm-12 col-xs-12"
+                              style={{ float: "left", marginLeft: "10px" }}
+                            >
+                              <input
+                                type="text"
+                                id="imgUrl"
+                                class="form-control input-md"
+                                style={{ width: "100%" }}
+                                required=""
+                                name="imgUrl"
+                                placeholder="Your Image URL"
+                                //  onChange={this.handleInputChange}
+                                value={this.state.imgUrl[]}
+                                error={this.props.errors.imgUrl}
+                              />
+                            </div>
+                          </div>
+                        </div> */}
+                        <div className="image_dottedBorder">
+                          <div
+                            style={{
+                              width: "100%",
+                              padding: "10px",
+                              // margin: "10px",
+                              // marginLeft: "20px",
+                            }}
+                          >
+                            <form onSubmit={(e) => this.uploadImage(e)}>
+                              <div
+                                className="dottedBorder"
+                                style={{
+                                  display: "flex",
+                                  width: "100%",
+                                  flexDirection: "column",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <div className="row_colmn">
+                                  <div className="lightbg_box">
+                                    <label htmlFor="myInput">
+                                      <AddAPhotoIcon
+                                        style={{ fontSize: "40px" }}
+                                      />
+                                    </label>
+                                    <input
+                                      id="myInput"
+                                      multiple
+                                      className="image_upload"
+                                      style={{ display: "none" }}
+                                      type="file"
+                                      onChange={this.fileChangedHandler}
+                                      //id="gallery-image"
+                                      accept=".jpg, .jpeg, .png"
+                                    />
+                                  </div>
+                                  <div className="box_wdhgt">
+                                    <p className="light_ashFont">
+                                      Photos 0/15 Increase your chances of
+                                      getting genuine responses by adding
+                                      atleast 5 images. Hall, Bedroom, Kitchen,
+                                      and Bathroom images will be ideal to add
+                                      for a home
+                                    </p>
+                                  </div>
+                                </div>
+                                <button
+                                  className="login__signInButton"
+                                  style={{ width: "100%", height: "30px" }}
+                                >
+                                  Upload!
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+                          <div
+                            className="dottedBorder"
+                            style={{
+                              width: "100%",
+                              padding: "10px",
+                              marginBottom: "10px",
+                            }}
+                          >
+                            {this.state.loading ? (
+                              <div className="loading-indicator">
+                                <Spinner name="spinner" />
+                              </div>
+                            ) : this.state.images.length > 0 ? (
+                              <div
+                                style={{
+                                  overflowX: "auto",
+                                  width: "100%",
+                                }}
+                              >
+                                <div
+                                  className="Row"
+                                  style={{
+                                    height: "130px",
+                                    marginLeft: "0px",
+                                  }}
+                                >
+                                  {this.state.images.map((url, i) => {
+                                    return (
+                                      <img
+                                        key={i}
+                                        src={`${baseUrl}uploads/${url}`}
+                                      />
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            ) : (
+                              <p> Your images will appear here!</p>
+                            )}
+                          </div>
+                        </div>
+                        <p
+                          className="sidebar__title"
+                          style={{ marginTop: "20px" }}
+                        >
+                          Property Price
+                        </p>
+                        <div className="colored_separator"></div>
+                        {this.state.status == "Sell" ? (
+                          <div
+                            className="row"
+                            style={{
+                              width: "100%",
+                            }}
+                          >
+                            <div className="input_width">
+                              <p className="label__titleAddproperty">
+                                Sale Price*
+                              </p>
+                            </div>
+                            <div style={{ width: "60%" }}>
+                              <div
+                                class="input-group col-sm-12 col-xs-12"
+                                style={{ float: "left", marginLeft: "10px" }}
+                              >
+                                <input
+                                  type="text"
+                                  id="expectedPrice"
+                                  class="form-control input-md"
+                                  style={{ width: "100%" }}
+                                  required=""
+                                  name="expectedPrice"
+                                  placeholder="Expected Price"
+                                  onChange={this.handleInputChange}
+                                  value={this.state.expectedPrice}
+                                  error={this.props.errors.expectedPrice}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+                        {this.state.status != "Sell" ? (
+                          <div
+                            className="row"
+                            style={{
+                              width: "100%",
+                            }}
+                          >
+                            <div className="input_width">
+                              <p className="label__titleAddproperty">
+                                Deposit Price*
+                              </p>
+                            </div>
+                            <div style={{ width: "60%" }}>
+                              <div
+                                class="input-group col-sm-12 col-xs-12"
+                                style={{ float: "left", marginLeft: "10px" }}
+                              >
+                                <input
+                                  type="text"
+                                  id="expectedDeposit"
+                                  class="form-control input-md"
+                                  style={{ width: "100%" }}
+                                  required=""
+                                  name="expectedDeposit"
+                                  placeholder="Deposit price"
+                                  onChange={this.handleInputChange}
+                                  value={this.state.expectedDeposit}
+                                  error={this.props.errors.expectedDeposit}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+                        {this.state.status != "Sell" ? (
+                          <div
+                            className="row"
+                            style={{
+                              width: "100%",
+                            }}
+                          >
+                            <div className="input_width">
+                              <p className="label__titleAddproperty">
+                                Rent Price*
+                              </p>
+                            </div>
+                            <div style={{ width: "60%" }}>
+                              <div
+                                class="input-group col-sm-12 col-xs-12"
+                                style={{ float: "left", marginLeft: "10px" }}
+                              >
+                                <input
+                                  type="text"
+                                  id="price"
+                                  class="form-control input-md"
+                                  style={{ width: "100%" }}
+                                  required=""
+                                  name="price"
+                                  placeholder="Rent price"
+                                  onChange={this.handleInputChange}
+                                  value={this.state.price}
+                                  validate={this.startWithNonZero}
+                                  error={this.props.errors.price}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+                        <p
+                          className="sidebar__title"
+                          style={{ marginTop: "20px" }}
+                        >
+                          More Information of your property
+                        </p>
+                        <div className="colored_separator"></div>
+                        <div
+                          className="row"
+                          style={{
+                            width: "100%",
+                          }}
+                        >
+                          <div className="input_width">
+                            <p className="label__titleAddproperty">
+                              About Property*
                             </p>
                           </div>
                           <div style={{ width: "60%" }}>
@@ -731,21 +1180,249 @@ class AddPropertyPage extends Component {
                               style={{
                                 float: "left",
                                 marginLeft: "10px",
-                                marginTop: "-27px",
-                                marginBottom: "-10px",
+                                marginTop: "-30px",
                               }}
                             >
-                              <SelectList
-                                options={propertyAgeType}
+                              <TextArea
+                                type="text"
+                                id="title"
+                                class="form-control input-md"
                                 style={{ width: "100%" }}
-                                name="propertyAge"
+                                required=""
+                                name="title"
+                                placeholder="About property(Min 30 characters)*"
                                 onChange={this.handleInputChange}
-                                value={this.state.propertyAge}
-                                error={this.props.errors.propertyAge}
+                                value={this.state.title}
+                                error={this.props.errors.title}
                               />
                             </div>
+                            {this.state.bhk != "" &&
+                            this.state.landmark != "" &&
+                            this.state.locality &&
+                            this.state.apartName != "" ? (
+                              <p>
+                                Well designed {this.state.bhk} apartment,{" "}
+                                {this.state.landmark} sqft carpet area, is
+                                available in {this.state.locality}. Its in{" "}
+                                {this.state.apartName}.
+                                <a onClick={this.handleTitle}>Use this.</a>
+                              </p>
+                            ) : null}
                           </div>
                         </div>
+                        {this.state.propertyType != "Plot" &&
+                        this.state.propertyType != "House/Villa" ? (
+                          <div
+                            className="row"
+                            style={{
+                              width: "100%",
+                            }}
+                          >
+                            <div className="input_width">
+                              <p className="label__titleAddproperty">
+                                Property On Floor*
+                              </p>
+                            </div>
+                            <div style={{ width: "60%" }}>
+                              <div
+                                class="col-sm-12 col-xs-12"
+                                style={{
+                                  float: "left",
+                                  marginLeft: "10px",
+                                  marginTop: "-27px",
+                                  marginBottom: "-10px",
+                                }}
+                              >
+                                <SelectList
+                                  options={floorType}
+                                  style={{ width: "100%" }}
+                                  name="floor"
+                                  onChange={this.handleInputChange}
+                                  value={this.state.floor}
+                                  error={this.props.errors.floor}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+                        {this.state.propertyType != "Plot" &&
+                        this.state.propertyType != "House/Villa" ? (
+                          <div
+                            className="row"
+                            style={{
+                              width: "100%",
+                            }}
+                          >
+                            <div className="input_width">
+                              <p className="label__titleAddproperty">
+                                Total Floors*
+                              </p>
+                            </div>
+                            <div style={{ width: "60%" }}>
+                              <div
+                                class="col-sm-12 col-xs-12"
+                                style={{
+                                  float: "left",
+                                  marginLeft: "10px",
+                                  marginTop: "-27px",
+                                  marginBottom: "-10px",
+                                }}
+                              >
+                                <SelectList
+                                  options={totalFloorType}
+                                  style={{ width: "100%" }}
+                                  name="totalFloor"
+                                  onChange={this.handleInputChange}
+                                  value={this.state.totalFloor}
+                                  error={this.props.errors.totalFloor}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+                        {this.state.propertyType != "Plot" ? (
+                          <div
+                            className="row"
+                            style={{
+                              width: "100%",
+                            }}
+                          >
+                            <div className="input_width">
+                              <p className="label__titleAddproperty">
+                                Furnishing*
+                              </p>
+                            </div>
+                            <div style={{ width: "60%" }}>
+                              <div
+                                class="col-sm-12 col-xs-12"
+                                style={{
+                                  float: "left",
+                                  marginLeft: "10px",
+                                  marginTop: "-27px",
+                                  marginBottom: "-10px",
+                                }}
+                              >
+                                <SelectList
+                                  options={furnishingType}
+                                  style={{ width: "100%" }}
+                                  name="furnishing"
+                                  onChange={this.handleInputChange}
+                                  value={this.state.furnishing}
+                                  error={this.props.errors.furnishing}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+                        {this.state.propertyType != "Plot" ? (
+                          <div
+                            className="row"
+                            style={{
+                              width: "100%",
+                            }}
+                          >
+                            <div className="input_width">
+                              <p className="label__titleAddproperty">
+                                No of Bedroom(s)*
+                              </p>
+                            </div>
+                            <div style={{ width: "60%" }}>
+                              <div
+                                class="input-group col-sm-12 col-xs-12"
+                                style={{ float: "left", marginLeft: "10px" }}
+                              >
+                                <input
+                                  type="text"
+                                  id="beds"
+                                  class="form-control input-md"
+                                  style={{ width: "100%" }}
+                                  required=""
+                                  name="beds"
+                                  placeholder="bedrooms"
+                                  onChange={this.handleInputChange}
+                                  value={this.state.beds}
+                                  validate={this.numbersOnly}
+                                  error={this.props.errors.beds}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+                        {this.state.propertyType != "Plot" ? (
+                          <div
+                            className="row"
+                            style={{
+                              width: "100%",
+                            }}
+                          >
+                            <div className="input_width">
+                              <p className="label__titleAddproperty">
+                                No of Bathroom(s)*
+                              </p>
+                            </div>
+                            <div style={{ width: "60%" }}>
+                              <div
+                                class="input-group col-sm-12 col-xs-12"
+                                style={{ float: "left", marginLeft: "10px" }}
+                              >
+                                <input
+                                  type="text"
+                                  id="baths"
+                                  class="form-control input-md"
+                                  style={{ width: "100%" }}
+                                  required=""
+                                  name="baths"
+                                  placeholder="bathrooms"
+                                  onChange={this.handleInputChange}
+                                  value={this.state.baths}
+                                  validate={this.numbersOnly}
+                                  error={this.props.errors.baths}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+                        <p
+                          className="sidebar__title"
+                          style={{ marginTop: "20px" }}
+                        >
+                          Additional Details
+                        </p>
+                        <div className="colored_separator"></div>
+                        {this.state.propertyType != "Plot" ? (
+                          <div
+                            className="row"
+                            style={{
+                              width: "100%",
+                            }}
+                          >
+                            <div className="input_width">
+                              <p className="label__titleAddproperty">
+                                No of Balconies
+                              </p>
+                            </div>
+                            <div style={{ width: "60%" }}>
+                              <div
+                                class="input-group col-sm-12 col-xs-12"
+                                style={{ float: "left", marginLeft: "10px" }}
+                              >
+                                <input
+                                  type="text"
+                                  id="balcony"
+                                  class="form-control input-md"
+                                  style={{ width: "100%" }}
+                                  required=""
+                                  name="balcony"
+                                  placeholder="balcony"
+                                  onChange={this.handleInputChange}
+                                  value={this.state.balcony}
+                                  validate={this.numbersOnly}
+                                  error={this.props.errors.balcony}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
                         <div
                           className="row"
                           style={{
@@ -776,7 +1453,46 @@ class AddPropertyPage extends Component {
                             </div>
                           </div>
                         </div>
-                        <div
+                        {this.state.propertyType != "Plot" ? (
+                          <div
+                            className="row"
+                            style={{
+                              width: "100%",
+                            }}
+                          >
+                            <div className="input_width">
+                              <p className="label__titleAddproperty">Parking</p>
+                            </div>
+                            <div style={{ width: "60%" }}>
+                              <div
+                                class="col-sm-12 col-xs-12"
+                                style={{
+                                  float: "left",
+                                  marginLeft: "10px",
+                                  marginTop: "-27px",
+                                  marginBottom: "-10px",
+                                }}
+                              >
+                                <SelectList
+                                  options={parkingType}
+                                  style={{ width: "100%" }}
+                                  name="garages"
+                                  onChange={this.handleInputChange}
+                                  value={this.state.garages}
+                                  error={this.props.errors.garages}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+                        <p
+                          className="sidebar__title"
+                          style={{ marginTop: "20px" }}
+                        >
+                          Society Amenities
+                        </p>
+                        <div className="colored_separator"></div>
+                        {/* <div
                           className="row"
                           style={{
                             width: "100%",
@@ -784,7 +1500,7 @@ class AddPropertyPage extends Component {
                         >
                           <div className="input_width">
                             <p className="label__titleAddproperty">
-                              Property Size*
+                              Bedroom(s)*
                             </p>
                           </div>
                           <div style={{ width: "60%" }}>
@@ -794,22 +1510,229 @@ class AddPropertyPage extends Component {
                             >
                               <input
                                 type="text"
-                                id="area"
+                                id="beds"
                                 class="form-control input-md"
                                 style={{ width: "100%" }}
                                 required=""
-                                name="area"
-                                placeholder="Property Size in sq.ft"
+                                name="beds"
+                                placeholder="bedrooms"
                                 onChange={this.handleInputChange}
-                                value={this.state.area}
+                                value={this.state.beds}
                                 validate={this.numbersOnly}
-                                error={this.props.errors.area}
+                                error={this.props.errors.beds}
                               />
                             </div>
                           </div>
-                        </div>
+                        </div> */}
+                        <div>
+                          <FormGroup row>
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="security"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.security}
+                                />
+                              }
+                              label="Gated Security"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="lift"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.lift}
+                                />
+                              }
+                              label="Lift"
+                            />
 
-                        <p
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="waterSupply"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.waterSupply}
+                                />
+                              }
+                              label="Water Supply"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="swimmingPool"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.swimmingPool}
+                                />
+                              }
+                              label="Swimming Pool"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="fireSafety"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.fireSafety}
+                                />
+                              }
+                              label="Visitor Parking"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="park"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.park}
+                                />
+                              }
+                              label="Park"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="clubHouse"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.clubHouse}
+                                />
+                              }
+                              label="Club House"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="tennis"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.tennis}
+                                />
+                              }
+                              label="Tennis Courts"
+                            />
+
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="powerBackUp"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.powerBackUp}
+                                />
+                              }
+                              label=" Power Backup"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="gym"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.gym}
+                                />
+                              }
+                              label="Gym"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="houseKeeping"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.houseKeeping}
+                                />
+                              }
+                              label="House Keeping"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="ac"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.ac}
+                                />
+                              }
+                              label="Air conditioning"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="smoking"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.smoking}
+                                />
+                              }
+                              label="Smoking Area"
+                            />
+
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="bar"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.bar}
+                                />
+                              }
+                              label="Bar"
+                            />
+
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="microwave"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.microwave}
+                                />
+                              }
+                              label="Microwave"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="playArea"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.playArea}
+                                />
+                              }
+                              label="Children Play Area"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="fireplace"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.fireplace}
+                                />
+                              }
+                              label="Fire Safety"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="toaster"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.toaster}
+                                />
+                              }
+                              label="Toaster"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="internet"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.internet}
+                                />
+                              }
+                              label="Internet"
+                            />
+                            <FormControlLabel
+                              control={
+                                <GreenCheckbox
+                                  name="tv"
+                                  onChange={this.handleInputChange}
+                                  checked={this.state.tv}
+                                />
+                              }
+                              label="Cable TV"
+                            />
+                          </FormGroup>
+                        </div>
+                        {/* <p
                           className="sidebar__title"
                           style={{ marginTop: "20px" }}
                         >
@@ -843,95 +1766,6 @@ class AddPropertyPage extends Component {
                                 onChange={this.handleInputChange}
                                 value={this.state.address}
                                 error={this.props.errors.address}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="row"
-                          style={{
-                            width: "100%",
-                          }}
-                        >
-                          <div className="input_width">
-                            <p className="label__titleAddproperty">
-                              Street/Area
-                            </p>
-                          </div>
-                          <div style={{ width: "60%" }}>
-                            <div
-                              class="input-group col-sm-12 col-xs-12"
-                              style={{ float: "left", marginLeft: "10px" }}
-                            >
-                              <input
-                                type="text"
-                                id="locality"
-                                class="form-control input-md"
-                                style={{ width: "100%" }}
-                                required=""
-                                name="locality"
-                                placeholder="Enter Your locality"
-                                onChange={this.handleInputChange}
-                                value={this.state.locality}
-                                error={this.props.errors.locality}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="row"
-                          style={{
-                            width: "100%",
-                          }}
-                        >
-                          <div className="input_width">
-                            <p className="label__titleAddproperty">Landmark</p>
-                          </div>
-                          <div style={{ width: "60%" }}>
-                            <div
-                              class="input-group col-sm-12 col-xs-12"
-                              style={{ float: "left", marginLeft: "10px" }}
-                            >
-                              <input
-                                type="text"
-                                id="landmark"
-                                class="form-control input-md"
-                                style={{ width: "100%" }}
-                                required=""
-                                name="landmark"
-                                placeholder="Enter Your landmark"
-                                onChange={this.handleInputChange}
-                                value={this.state.landmark}
-                                error={this.props.errors.landmark}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="row"
-                          style={{
-                            width: "100%",
-                          }}
-                        >
-                          <div className="input_width">
-                            <p className="label__titleAddproperty">City</p>
-                          </div>
-                          <div style={{ width: "60%" }}>
-                            <div
-                              class="input-group col-sm-12 col-xs-12"
-                              style={{ float: "left", marginLeft: "10px" }}
-                            >
-                              <input
-                                type="text"
-                                id="city"
-                                class="form-control input-md"
-                                style={{ width: "100%" }}
-                                required=""
-                                name="city"
-                                placeholder="Your City"
-                                onChange={this.handleInputChange}
-                                value={this.state.city}
-                                error={this.props.errors.city}
                               />
                             </div>
                           </div>
@@ -994,7 +1828,6 @@ class AddPropertyPage extends Component {
                             </div>
                           </div>
                         </div>
-
                         <div
                           className="row"
                           style={{
@@ -1234,68 +2067,6 @@ class AddPropertyPage extends Component {
                         >
                           <div className="input_width">
                             <p className="label__titleAddproperty">
-                              Furnishing*
-                            </p>
-                          </div>
-                          <div style={{ width: "60%" }}>
-                            <div
-                              class="col-sm-12 col-xs-12"
-                              style={{
-                                float: "left",
-                                marginLeft: "10px",
-                                marginTop: "-27px",
-                                marginBottom: "-10px",
-                              }}
-                            >
-                              <SelectList
-                                options={furnishingType}
-                                style={{ width: "100%" }}
-                                name="furnishing"
-                                onChange={this.handleInputChange}
-                                value={this.state.furnishing}
-                                error={this.props.errors.furnishing}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="row"
-                          style={{
-                            width: "100%",
-                          }}
-                        >
-                          <div className="input_width">
-                            <p className="label__titleAddproperty">Parking*</p>
-                          </div>
-                          <div style={{ width: "60%" }}>
-                            <div
-                              class="col-sm-12 col-xs-12"
-                              style={{
-                                float: "left",
-                                marginLeft: "10px",
-                                marginTop: "-27px",
-                                marginBottom: "-10px",
-                              }}
-                            >
-                              <SelectList
-                                options={parkingType}
-                                style={{ width: "100%" }}
-                                name="garages"
-                                onChange={this.handleInputChange}
-                                value={this.state.garages}
-                                error={this.props.errors.garages}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="row"
-                          style={{
-                            width: "100%",
-                          }}
-                        >
-                          <div className="input_width">
-                            <p className="label__titleAddproperty">
                               Description
                             </p>
                           </div>
@@ -1323,429 +2094,6 @@ class AddPropertyPage extends Component {
                           className="sidebar__title"
                           style={{ marginTop: "20px" }}
                         >
-                          Amenities
-                        </p>
-                        <div className="colored_separator"></div>
-                        <div
-                          className="row"
-                          style={{
-                            width: "100%",
-                          }}
-                        >
-                          <div className="input_width">
-                            <p className="label__titleAddproperty">
-                              Bathroom(s)*
-                            </p>
-                          </div>
-                          <div style={{ width: "60%" }}>
-                            <div
-                              class="input-group col-sm-12 col-xs-12"
-                              style={{ float: "left", marginLeft: "10px" }}
-                            >
-                              <input
-                                type="text"
-                                id="baths"
-                                class="form-control input-md"
-                                style={{ width: "100%" }}
-                                required=""
-                                name="baths"
-                                placeholder="bathrooms"
-                                onChange={this.handleInputChange}
-                                value={this.state.baths}
-                                validate={this.numbersOnly}
-                                error={this.props.errors.baths}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="row"
-                          style={{
-                            width: "100%",
-                          }}
-                        >
-                          <div className="input_width">
-                            <p className="label__titleAddproperty">
-                              Bedroom(s)*
-                            </p>
-                          </div>
-                          <div style={{ width: "60%" }}>
-                            <div
-                              class="input-group col-sm-12 col-xs-12"
-                              style={{ float: "left", marginLeft: "10px" }}
-                            >
-                              <input
-                                type="text"
-                                id="beds"
-                                class="form-control input-md"
-                                style={{ width: "100%" }}
-                                required=""
-                                name="beds"
-                                placeholder="bedrooms"
-                                onChange={this.handleInputChange}
-                                value={this.state.beds}
-                                validate={this.numbersOnly}
-                                error={this.props.errors.beds}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="row"
-                          style={{
-                            width: "100%",
-                          }}
-                        >
-                          <div className="input_width">
-                            <p className="label__titleAddproperty">Balcony</p>
-                          </div>
-                          <div style={{ width: "60%" }}>
-                            <div
-                              class="input-group col-sm-12 col-xs-12"
-                              style={{ float: "left", marginLeft: "10px" }}
-                            >
-                              <input
-                                type="text"
-                                id="balcony"
-                                class="form-control input-md"
-                                style={{ width: "100%" }}
-                                required=""
-                                name="balcony"
-                                placeholder="balcony"
-                                onChange={this.handleInputChange}
-                                value={this.state.balcony}
-                                validate={this.numbersOnly}
-                                error={this.props.errors.balcony}
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        <div>
-                          <FormGroup row>
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="security"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.security}
-                                />
-                              }
-                              label="Gated Security"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="lift"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.lift}
-                                />
-                              }
-                              label="Lift"
-                            />
-
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="waterSupply"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.waterSupply}
-                                />
-                              }
-                              label="Water Supply"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="swimmingPool"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.swimmingPool}
-                                />
-                              }
-                              label="Swimming Pool"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="fireSafety"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.fireSafety}
-                                />
-                              }
-                              label="Visitor Parking"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="park"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.park}
-                                />
-                              }
-                              label="Park"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="clubHouse"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.clubHouse}
-                                />
-                              }
-                              label="Club House"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="tennis"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.tennis}
-                                />
-                              }
-                              label="Tennis Courts"
-                            />
-
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="powerBackUp"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.powerBackUp}
-                                />
-                              }
-                              label=" Power Backup"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="gym"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.gym}
-                                />
-                              }
-                              label="Gym"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="houseKeeping"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.houseKeeping}
-                                />
-                              }
-                              label="House Keeping"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="ac"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.ac}
-                                />
-                              }
-                              label="Air conditioning"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="smoking"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.smoking}
-                                />
-                              }
-                              label="Smoking Area"
-                            />
-
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="bar"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.bar}
-                                />
-                              }
-                              label="Bar"
-                            />
-
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="microwave"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.microwave}
-                                />
-                              }
-                              label="Microwave"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="playArea"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.playArea}
-                                />
-                              }
-                              label="Children Play Area"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="fireplace"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.fireplace}
-                                />
-                              }
-                              label="Fire Safety"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="toaster"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.toaster}
-                                />
-                              }
-                              label="Toaster"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="internet"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.internet}
-                                />
-                              }
-                              label="Internet"
-                            />
-                            <FormControlLabel
-                              control={
-                                <GreenCheckbox
-                                  name="tv"
-                                  onChange={this.handleInputChange}
-                                  checked={this.state.tv}
-                                />
-                              }
-                              label="Cable TV"
-                            />
-                          </FormGroup>
-                        </div>
-                        <p
-                          className="sidebar__title"
-                          style={{ marginTop: "20px" }}
-                        >
-                          Gallery-Upload Photos
-                        </p>
-                        <div className="colored_separator"></div>
-                        <div
-                          className="row"
-                          style={{
-                            width: "100%",
-                          }}
-                        >
-                          <div className="input_width">
-                            <p className="label__titleAddproperty">Image URL</p>
-                          </div>
-                          <div style={{ width: "60%" }}>
-                            <div
-                              class="input-group col-sm-12 col-xs-12"
-                              style={{ float: "left", marginLeft: "10px" }}
-                            >
-                              <input
-                                type="text"
-                                id="imgUrl"
-                                class="form-control input-md"
-                                style={{ width: "100%" }}
-                                required=""
-                                name="imgUrl"
-                                placeholder="Your Image URL"
-                                //  onChange={this.handleInputChange}
-                                value={this.state.imgUrl}
-                                error={this.props.errors.imgUrl}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="image_dottedBorder">
-                          <div
-                            style={{
-                              width: "100%",
-                              padding: "10px",
-                              // margin: "10px",
-                              // marginLeft: "20px",
-                            }}
-                          >
-                            <form onSubmit={(e) => this.uploadImage(e)}>
-                              <div
-                                className="dottedBorder"
-                                style={{
-                                  display: "flex",
-                                  width: "100%",
-                                  flexDirection: "column",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <input
-                                  className="image_upload"
-                                  type="file"
-                                  onChange={this.fileChangedHandler}
-                                  id="gallery-image"
-                                  accept=".jpg, .jpeg, .png"
-                                />
-
-                                <button
-                                  className="login__signInButton"
-                                  style={{ width: "100%", height: "30px" }}
-                                >
-                                  Upload!
-                                </button>
-                              </div>
-                            </form>
-                          </div>
-                          <div
-                            className="dottedBorder"
-                            style={{
-                              width: "100%",
-                              padding: "10px",
-                              marginBottom: "10px",
-                            }}
-                          >
-                            {this.state.loading ? (
-                              <div className="loading-indicator">
-                                <Spinner name="spinner" />
-                              </div>
-                            ) : this.state.images.length > 0 ? (
-                              <div
-                                style={{
-                                  overflowX: "auto",
-                                  width: "100%",
-                                }}
-                              >
-                                <div
-                                  className="Row"
-                                  style={{
-                                    height: "130px",
-                                    marginLeft: "0px",
-                                  }}
-                                >
-                                  {this.state.images.map((url, i) => {
-                                    return (
-                                      <img
-                                        key={i}
-                                        src={`${baseUrl}uploads/${url}`}
-                                      />
-                                    );
-                                  })}
-                                </div>
-                              </div>
-                            ) : (
-                              <p> Your images will appear here!</p>
-                            )}
-                          </div>
-                        </div>
-                        <p
-                          className="sidebar__title"
-                          style={{ marginTop: "20px" }}
-                        >
                           Locate-Your Property
                         </p>
                         <div className="colored_separator"></div>
@@ -1761,7 +2109,7 @@ class AddPropertyPage extends Component {
                           <Map
                             mapinfo={(lat, long) => this.mapInfo(lat, long)}
                           />
-                        </div>
+                        </div> */}
                         <button
                           type="submit"
                           className="color__Button"

@@ -4,7 +4,8 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import jwt_decode from "jwt-decode";
 import store from "./store/store";
-import { Header, Footer } from "./components/";
+import { Header } from "./components/";
+import Footer from "./views/common/HomePage/Footer/Footer";
 import Routes from "./routes/routes";
 import {
   setCurrentUser,

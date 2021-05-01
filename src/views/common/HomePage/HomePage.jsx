@@ -14,6 +14,14 @@ import SearchIcon from "@material-ui/icons/Search";
 import ApartmentIcon from "@material-ui/icons/Apartment";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import ReceiptIcon from "@material-ui/icons/Receipt";
+// page comp
+import SearchBar from "./HomeSearchBar/SearchBar";
+import FeatureProperty from "./FeaturedProperty/FeaturedProperty";
+import LeftImageSlider from "./LeftImageSlider/LeftImageSlider/LeftImageSlider";
+import Slider from "./Slider/PropertySlider/PropertySlider";
+import Artical from "./Artical/Artical";
+import NewsLatter from "./NewsLatter/NewsLatter";
+// import Footer from "./Footer/Footer";
 // style
 import "./HomePage.css";
 
@@ -77,59 +85,7 @@ class HomePage extends React.Component {
                         Find Your Dream Home With Us!!
                       </p>
                     </div>
-                    <div className="header__search">
-                      <input
-                        className="header__searchInput"
-                        type="text"
-                        placeholder="Enter localities or landmarks here"
-                      />
-                      <div className="header__searchIcon">
-                        <SearchIcon className="header__searchIconSetting" />
-                        Search
-                      </div>
-                    </div>
-                  </Grid>
-                </Grid>
-              </div>
-              <div className="home_imageCardContainerTwo">
-                <Grid container>
-                  <Grid item xs={12} sm={12} md={12}>
-                    <div className="home_list">
-                      <div className="home_listItem">
-                        <span className="home_listItemTitle">
-                          We Offer 3 Simple Steps.
-                        </span>
-                      </div>
-
-                      <div className="home_listItemContainer">
-                        <Grid container>
-                          <Grid item xs={4} sm={4} md={4}>
-                            <div className="home_listItemIcons">
-                              <ApartmentIcon className="home_listItemIcon" />
-                              <span className="home_listItemSubTitle">
-                                Post/Search
-                              </span>
-                            </div>
-                          </Grid>
-                          <Grid item xs={4} sm={4} md={4}>
-                            <div className="home_listItemIcons">
-                              <SupervisorAccountIcon className="home_listItemIcon" />
-                              <span className="home_listItemSubTitle">
-                                Visit/Connect
-                              </span>
-                            </div>
-                          </Grid>
-                          <Grid item xs={4} sm={4} md={4}>
-                            <div className="home_listItemIcons">
-                              <ReceiptIcon className="home_listItemIcon" />
-                              <span className="home_listItemSubTitle">
-                                Sell/Register
-                              </span>
-                            </div>
-                          </Grid>
-                        </Grid>
-                      </div>
-                    </div>
+                    <SearchBar />
                   </Grid>
                 </Grid>
               </div>
@@ -144,16 +100,7 @@ class HomePage extends React.Component {
                         Find Your Dream Home With Us!!
                       </p>
                     </div>
-                    <div className="header__searchMob">
-                      <input
-                        className="header__searchInputMob"
-                        type="text"
-                        placeholder="Enter localities or landmarks here"
-                      />
-                      <div className="header__searchIconMob">
-                        <SearchIcon className="header__searchIconSettingMob" />
-                      </div>
-                    </div>
+                    <SearchBar />
                   </Grid>
                 </Grid>
               </div>
@@ -161,16 +108,10 @@ class HomePage extends React.Component {
           </div>
           {/* Trending Row */}
           <div className="home__rowHeader">
-            <div className="home__rowTitleLine">Trending</div>
+            <FeatureProperty />
           </div>
           {/* Property card */}
           <div className="property_HomeCard">{renderComponent}</div>
-          {/* Button */}
-          <div className="home__moreProperty">
-            <Link to="/properties-list" className="home__morePropertyButton">
-              More Properties
-            </Link>
-          </div>
           {/* Add */}
           <div className="home__add">
             <img
@@ -182,9 +123,11 @@ class HomePage extends React.Component {
               class="img_ad"
             />
           </div>
-          {/*  Enquiry Form */}
-          <div className="cardsix">
-            <CardSix />
+          <div style={{ marginTop: "50px" }}>
+            <LeftImageSlider />
+            <Slider />
+            <Artical />
+            <NewsLatter />
           </div>
         </div>
       </React.Fragment>

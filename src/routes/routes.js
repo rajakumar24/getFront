@@ -11,6 +11,9 @@ import {
   ContactPage,
   BlogDashboard,
 } from "../views/common";
+import BuyPage from "../views/common/GetRightBuy/Buy";
+import PlotPage from "../views/common/GetRigthPlot/Plot";
+import RentPage from "../views/common/GetRightRent/Rent";
 import { RegistrationPage, LoginPage } from "../views/visitor";
 import {
   AddPropertyPage,
@@ -38,6 +41,9 @@ class Routes extends React.Component {
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route path="/home" component={HomePage} />
+        <Route path="/buy" component={BuyPage} />
+        <Route path="/rent" component={RentPage} />
+        <Route path="/plot" component={PlotPage} />
         <Route path="/about" component={AboutPage} />
         <Route path="/passion" component={PassionPage} />
         <Route path="/contact" component={ContactPage} />

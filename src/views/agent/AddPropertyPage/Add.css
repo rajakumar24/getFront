@@ -51,6 +51,25 @@ button {
   margin-top: -10px;
   margin-bottom: 15px;
 }
+.lightbg_box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: 300px;
+  background-color: rgb(201, 196, 196);
+  z-index: 0;
+}
+.box_wdhgt {
+  display: flex;
+  word-wrap: initial;
+  padding: 10px;
+}
+.light_mdFont {
+  font-size: 14px;
+  color: #8a8484;
+  font-weight: 300;
+}
 .photo {
   width: 100%;
   height: 100%;
