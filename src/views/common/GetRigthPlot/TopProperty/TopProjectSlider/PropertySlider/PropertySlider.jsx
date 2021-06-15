@@ -4,7 +4,7 @@ import "../../../../../../../node_modules/owl.carousel/dist/assets/owl.carousel.
 import "../../../../../../../node_modules/owl.carousel/dist/assets/owl.theme.default.css";
 import "./style.css";
 
-// Component
+// Component pages
 import PropertySliderCard from "../PropertySliderCard/PropertySliderCard";
 
 export class PropertySlider extends Component {
